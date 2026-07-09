@@ -1,5 +1,5 @@
 // Desk Glance 서비스워커: 앱 셸 캐시 (오프라인 동작 — 완전 온디바이스 앱이므로 전부 캐시 가능)
-var CACHE = 'desk-glance-v1';
+var CACHE = 'desk-glance-2026-07-09-1311';
 var ASSETS = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', function (e) {
@@ -15,10 +15,14 @@ self.addEventListener('activate', function (e) {
 });
 
 // 네트워크 우선(새 버전 반영), 실패 시 캐시 (오프라인)
+// 페이지 진입(navigate)은 HTTP 캐시를 재검증해 배포 후 즉시 새 버전을 받는다
 self.addEventListener('fetch', function (e) {
   if (e.request.method !== 'GET') return;
+  var req = e.request.mode === 'navigate'
+    ? new Request(e.request.url, { cache: 'no-cache' })
+    : e.request;
   e.respondWith(
-    fetch(e.request).then(function (res) {
+    fetch(req).then(function (res) {
       var copy = res.clone();
       caches.open(CACHE).then(function (c) { c.put(e.request, copy); });
       return res;
