@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="color-scheme" content="only light">
 <title>Desk Glance</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#17150F">
@@ -6,7 +7,9 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
+  /* 테마는 앱이 직접 그린다 — 브라우저(안드로이드 Chrome 등)의 '웹사이트 자동 어둡게' 강제 변환을 차단 */
   :root {
+    color-scheme: only light;
     --bg: #000000;
     --ink: #F2F0EB;
     /* 잉크 파생 단계: --ink에서 자동 파생 (화이트 테마에서도 그대로 동작) */
@@ -1157,7 +1160,7 @@
           <div class="ctxt"><b data-i18n="askTitle">문의</b><span data-i18n="askBody">문의는 이메일로 부탁드립니다.</span></div>
           <a class="mini-btn" href="mailto:hyunhee.david@gmail.com" data-i18n="askBtn">이메일</a>
         </div>
-        <p class="note">Desk Glance v0.2 · build 2026-07-09 13:11</p>
+        <p class="note">Desk Glance v0.2 · build 2026-07-09 13:27</p>
       </div>
     </div>
 

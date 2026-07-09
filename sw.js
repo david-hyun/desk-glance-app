@@ -1,5 +1,5 @@
 // Desk Glance 서비스워커: 앱 셸 캐시 (오프라인 동작 — 완전 온디바이스 앱이므로 전부 캐시 가능)
-var CACHE = 'desk-glance-2026-07-09-1311';
+var CACHE = 'desk-glance-2026-07-09-1327';
 var ASSETS = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', function (e) {
