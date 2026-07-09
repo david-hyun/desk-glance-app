@@ -29,7 +29,7 @@
   html, body { height: 100%; }
   body {
     margin: 0;
-    background: #0A0A0A;
+    background: #0A0A0A; /* 화면 밖 여백 — 화이트 테마에서는 body.light로 함께 밝아진다 */
     color: var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Malgun Gothic", system-ui, sans-serif;
     font-variant-numeric: tabular-nums;
@@ -55,7 +55,7 @@
      CSS 변수는 '선언된 요소' 기준으로 var()를 해석하므로, :root에서 만든
      파생 단계는 --ink를 뒤집어도 다크용 크림색으로 남는다. */
   #screen.light {
-    --bg: #FBFAF7;
+    --bg: #FFFFFF;
     --ink: #1A1712;
     --ink-2: color-mix(in srgb, var(--ink) 62%, transparent);
     --ink-3: color-mix(in srgb, var(--ink) 40%, transparent);
@@ -68,6 +68,9 @@
     --full-dim: color-mix(in srgb, var(--accent) 55%, transparent);
     --full-light: color-mix(in srgb, var(--accent) 25%, transparent);
   }
+  /* 실기기(PWA)에서 화면 비율 차이로 남는 레터박스도 테마를 따라가게 */
+  body.light { background: #FFFFFF; }
+  body.light #screen.framed { box-shadow: 0 0 0 1px rgba(26, 23, 18, 0.18), 0 24px 80px rgba(0, 0, 0, 0.18); }
   #shift { position: absolute; inset: 0; transition: transform 1.2s ease; }
   @media (prefers-reduced-motion: reduce) { #shift { transition: none; } }
 
@@ -3585,6 +3588,14 @@
     document.getElementById('open-pro').textContent = isPro ? T('proBtnOn') : 'Pro Mode';
   }
 
+  // 테마 적용: 화면 + 주변 여백(body) + PWA 상태바(theme-color)를 함께 전환
+  function applyBg(light) {
+    document.getElementById('screen').classList.toggle('light', light);
+    document.body.classList.toggle('light', light);
+    var tc = document.querySelector('meta[name="theme-color"]');
+    if (tc) tc.setAttribute('content', light ? '#FFFFFF' : '#17150F');
+  }
+
   function setMode(mode) {
     viewMode = mode;
     try { localStorage.setItem('dgMode', mode); } catch (e) {}
@@ -3631,9 +3642,8 @@
     // 테마 (블랙/화이트)
     var bgBtn = ev.target.closest('button[data-bg]');
     if (bgBtn) {
-      var bgv = bgBtn.getAttribute('data-bg');
-      document.getElementById('screen').classList.toggle('light', bgv === 'light');
-      try { localStorage.setItem('dgBg', bgv); } catch (e) {}
+      applyBg(bgBtn.getAttribute('data-bg') === 'light');
+      try { localStorage.setItem('dgBg', bgBtn.getAttribute('data-bg')); } catch (e) {}
       syncConsoleUI();
       return;
     }
@@ -3676,7 +3686,7 @@
     if (savedMode === 'standl' || savedMode === 'standp') viewMode = savedMode;
     if (localStorage.getItem('dgConsoleOpen') === '1') { consoleEl.hidden = false; consoleToggle.classList.add('open'); }
     // 설치 기본 테마 = 화이트 (저장값이 있으면 그것을 따른다)
-    if ((localStorage.getItem('dgBg') || 'light') === 'light') document.getElementById('screen').classList.add('light');
+    applyBg((localStorage.getItem('dgBg') || 'light') === 'light');
     var savedHours = (localStorage.getItem('dgHours') || '').split(',');
     if (savedHours.length === 2 && +savedHours[0] && +savedHours[1]) {
       GRID_START = +savedHours[0]; GRID_END = +savedHours[1];
